@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
@@ -13,7 +14,26 @@ export function Orders() {
 
   useEffect(() => {
     setIsLoading(true);
-  }, []);
+
+    const subscriber = firestore()
+      .collection('Orders')
+      .where('status', '==', status)
+      .onSnapshot(querySnapshot => {
+        const data = querySnapshot.docs.map(documentSnapshot => {
+          return {
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          } as OrderProps;
+        }
+
+        )
+        setOrders(data);
+        setIsLoading(false);
+      }
+      );
+
+      return () => subscriber();
+  }, [status]);
 
   return (
     <Container>

@@ -27,6 +27,8 @@ type Props = {
 };
 
 export function Order({ data }: Props) {
+  console.log("🚀 ~ file: index.tsx ~ line 30 ~ Order ~ data", data)
+  
   const theme = useTheme();
 
   return (
@@ -35,7 +37,7 @@ export function Order({ data }: Props) {
 
       <Content>
         <Header>
-          <Title>Computador Desktop</Title>
+          <Title>{data.patrimony}</Title>
           <MaterialIcons
             name={data.status === "open" ? "hourglass-empty" : "check-circle"}
             size={24}

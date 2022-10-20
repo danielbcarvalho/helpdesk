@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 import { Button } from '@components/Controllers/Button';
 import { Input } from '@components/Controllers/Input';
@@ -11,6 +12,27 @@ export function AccountForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   function handleNewAccount() {
+    setIsLoading(true);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        Alert.alert('Conta criada com sucesso!');
+      })
+      .catch((error) => {
+        console.log("🚀 ~ file: index.tsx ~ line 22 ~ handleNewAccount ~ error", error)
+        if (error.code === 'auth/email-already-in-use') {
+          Alert.alert('Esse e-mail já está em uso!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          Alert.alert('E-mail inválido!');
+        }
+
+        if (error.code === 'auth/weak-password') {
+          Alert.alert('Senha muito fraca!');
+        }
+      }
+      ).finally(() => setIsLoading(false));
 
   }
 
